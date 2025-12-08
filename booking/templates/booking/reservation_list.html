@@ -1,0 +1,57 @@
+{% extends "booking/base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2>Reserveringen</h2>
+  {% if user.is_authenticated and family %}
+    <a href="{% url 'booking:reservation_create' %}" class="btn btn-primary">
+      Nieuwe reservering
+    </a>
+  {% endif %}
+</div>
+
+{% if family %}
+  <p>Reserveringen voor gezin: <strong>{{ family }}</strong></p>
+{% else %}
+  <p><em>Je hebt geen gezin gekoppeld; mogelijk zie je hier alle reserveringen (beheer).</em></p>
+{% endif %}
+
+<table class="table table-striped table-hover align-middle">
+  <thead>
+    <tr>
+      <th>Gein</th>
+      <th>Periode</th>
+      <th>Prijs</th>
+      <th>Check-in</th>
+      <th>Check-out</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for r in reservations %}
+      <tr>
+        <td>{{ r.family }}</td>
+        <td>{{ r.start_date }} t/m {{ r.end_date }}</td>
+        <td>
+          {% if r.is_free %}
+            <span class="badge bg-success">Gratis (familie)</span>
+          {% else %}
+            € {{ r.total_price }}
+          {% endif %}
+        </td>
+        <td>{{ r.checked_in_at|date:"d-m-Y H:i"|default:"-" }}</td>
+        <td>{{ r.checked_out_at|date:"d-m-Y H:i"|default:"-" }}</td>
+        <td class="text-end">
+          <a href="{% url 'booking:reservation_detail' r.pk %}" class="btn btn-sm btn-outline-secondary">
+            Details
+          </a>
+        </td>
+      </tr>
+    {% empty %}
+      <tr>
+        <td colspan="6"><em>Geen reserveringen gevonden.</em></td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

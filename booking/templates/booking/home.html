@@ -1,0 +1,42 @@
+{% extends "booking/base.html" %}
+
+{% block content %}
+<div class="row">
+  <div class="col-md-8">
+    <h1 class="mb-3">Welkom bij Bed &amp; Breakfast Familie Vogelaar</h1>
+    <p class="lead">
+      Deze website is speciaal voor Familie Vogelaar. Hier kunnen de drie gezinnen
+      een kamer reserveren bij Pa en Ma, gratis en met een duidelijk overzicht.
+    </p>
+
+    {% if user.is_authenticated %}
+      {% if family %}
+        <div class="card mt-4">
+          <div class="card-body">
+            <h5 class="card-title">Jouw gezin</h5>
+            <p class="card-text">
+              Ingelogd als: <strong>{{ family }}</strong><br>
+              Vandaag is het: {{ today }}
+            </p>
+            <a href="{% url 'booking:reservation_create' %}" class="btn btn-primary">
+              Nieuwe reservering maken
+            </a>
+            <a href="{% url 'booking:reservation_list' %}" class="btn btn-outline-secondary ms-2">
+              Mijn reserveringen
+            </a>
+          </div>
+        </div>
+      {% else %}
+        <div class="alert alert-warning mt-3">
+          Je bent ingelogd, maar je account is nog niet gekoppeld aan een gezin.
+          Vraag de beheerder om je te koppelen aan één van de families.
+        </div>
+      {% endif %}
+    {% else %}
+      <div class="alert alert-info mt-3">
+        Log in om reserveringen te maken en in- en uit te checken.
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "booking/base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-4">
+    <h2>Inloggen</h2>
+    <form method="post" class="card card-body mt-3">
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+      <div class="mb-3">
+        <label class="form-label" for="{{ form.username.id_for_label }}">Gebruikersnaam</label>
+        {{ form.username }}
+      </div>
+      <div class="mb-3">
+        <label class="form-label" for="{{ form.password.id_for_label }}">Wachtwoord</label>
+        {{ form.password }}
+      </div>
+      <button type="submit" class="btn btn-primary w-100">Inloggen</button>
+    </form>
+  </div>
+</div>
+{% endblock %}
