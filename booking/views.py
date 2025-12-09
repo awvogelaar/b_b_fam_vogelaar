@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, timedelta
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -139,3 +139,46 @@ def reservation_checkout(request, pk):
         )
 
     return redirect("booking:reservation_detail", pk=pk)
+
+
+@login_required
+def availability_view(request):
+    """
+    Laat voor iedereen die is ingelogd zien welke data al geboekt zijn
+    en welke nog vrij zijn, binnen een bepaalde periode (bijvoorbeeld komende 60 dagen).
+    """
+    today = date.today()
+    horizon = today + timedelta(days=60)  # toon bv. komende 60 dagen
+
+    # Haal alle reserveringen op die overlappen met vandaag–horizon
+    reservations = Reservation.objects.filter(
+        end_date__gte=today,
+        start_date__lte=horizon,
+    ).select_related("family")
+
+    # Bouw een set met alle bezette data
+    booked_dates = set()
+    for r in reservations:
+        current = r.start_date
+        while current <= r.end_date:
+            booked_dates.add(current)
+            current = current + timedelta(days=1)
+
+    # Bouw een lijst van dagen in de periode met flag 'is_booked'
+    days = []
+    current = today
+    while current <= horizon:
+        days.append(
+            {
+                "date": current,
+                "is_booked": current in booked_dates,
+            }
+        )
+        current = current + timedelta(days=1)
+
+    context = {
+        "days": days,
+        "today": today,
+        "horizon": horizon,
+    }
+    return render(request, "booking/availability.html", context)

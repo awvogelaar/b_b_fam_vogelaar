@@ -19,4 +19,5 @@ urlpatterns = [
         views.reservation_checkout,
         name="reservation_checkout",
     ),
+    path("availability/", views.availability_view, name="availability"),
 ]
