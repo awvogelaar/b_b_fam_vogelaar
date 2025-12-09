@@ -3,7 +3,7 @@ import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 DEBUG = os.environ.get("DJANGO_DEBUG", "False") == "True"
-ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "*").split(",")
+ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "https://bed-and-breakfast-vogelaar.onrender.com/")
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "AdianVogelaarIsAdmin!")
 
 INSTALLED_APPS = [
